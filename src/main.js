@@ -40,7 +40,7 @@ async function runPipeline(topic) {
     const videoDir = path.join(process.cwd(), 'video');
     const outputPath = path.join(process.cwd(), 'final_shorts.mp4');
     
-    let renderCommand = `npx remotion render src/index.ts MyComp ../final_shorts.mp4`;
+    let renderCommand = `npx remotion render src/index.ts MyComp ../final_shorts.mp4 --concurrency=1 --gl=angle --log=verbose`;
     
     // 로컬 Mac 환경일 때만 내장 크롬 충돌을 피하기 위해 시스템 크롬 강제 할당
     if (process.platform === 'darwin') {
