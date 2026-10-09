@@ -45,6 +45,9 @@ async function runPipeline(topic) {
     // 로컬 Mac 환경일 때만 내장 크롬 충돌을 피하기 위해 시스템 크롬 강제 할당
     if (process.platform === 'darwin') {
       renderCommand = `NODE_OPTIONS=--dns-result-order=ipv4first npx remotion render src/index.ts MyComp ../final_shorts.mp4 --browser-executable="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`;
+    } else if (process.platform === 'linux') {
+      // GitHub Actions (Ubuntu) 에서는 기본 설치된 Chrome 사용
+      renderCommand = `npx remotion render src/index.ts MyComp ../final_shorts.mp4 --browser-executable="/usr/bin/google-chrome"`;
     }
 
     const { stdout, stderr } = await execPromise(renderCommand, {
