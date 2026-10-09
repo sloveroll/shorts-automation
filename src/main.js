@@ -58,6 +58,8 @@ async function runPipeline(topic) {
     
   } catch (error) {
     console.error('\n❌ 파이프라인 실행 중 오류 발생:', error);
+    if (error.stdout) console.log('\n--- STDOUT ---\n', error.stdout);
+    if (error.stderr) console.error('\n--- STDERR ---\n', error.stderr);
     process.exit(1);
   }
 }

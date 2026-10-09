@@ -10,10 +10,3 @@ import { Config } from "@remotion/cli/config";
 Config.setRspack(true);
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
-Config.setPuppeteerTimeout(120000);
-Config.setChromiumOptions((options) => [
-  ...options,
-  "--no-sandbox",
-  "--disable-setuid-sandbox",
-  "--disable-dev-shm-usage"
-]);
