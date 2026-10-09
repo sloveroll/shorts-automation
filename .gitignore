@@ -3,7 +3,7 @@ node_modules/
 video/node_modules/
 video/.env
 *.mp4
-used_topics.txt
+
 video/public/*.jpg
 video/public/*.mp3
 video/public/*.json
