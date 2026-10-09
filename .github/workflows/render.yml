@@ -1,0 +1,42 @@
+name: Render Shorts Automation
+
+on:
+  workflow_dispatch: # GitHub에서 수동으로 버튼을 눌러서 실행
+
+jobs:
+  render:
+    name: Generate Video
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies (Root)
+        run: npm install
+
+      - name: Install dependencies (Video/Remotion)
+        working-directory: ./video
+        run: npm install
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Run Automation Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          FAL_KEY: ${{ secrets.FAL_KEY }}
+        run: node src/main.js
+
+      - name: Upload Generated Video
+        uses: actions/upload-artifact@v4
+        with:
+          name: final_shorts
+          path: final_shorts.mp4
+          retention-days: 7

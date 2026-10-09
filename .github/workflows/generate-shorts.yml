@@ -1,0 +1,47 @@
+name: Generate Shorts Daily
+
+on:
+  schedule:
+    # 매일 한국 시간으로 오후 1시 (UTC 04:00) 에 자동 실행
+    - cron: '0 4 * * *'
+    # 매일 한국 시간으로 오후 7시 (UTC 10:00) 에 자동 실행
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+    # GitHub 웹사이트에서 버튼을 눌러 수동으로 즉시 실행할 수 있게 허용
+
+jobs:
+  build-and-render:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 저장소 코드 불러오기
+        uses: actions/checkout@v4
+
+      - name: Node.js 20 세팅
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 메인 폴더 패키지 설치
+        run: npm install
+
+      - name: 비디오(Remotion) 패키지 설치
+        working-directory: ./video
+        run: npm install
+
+      - name: AI 쇼츠 파이프라인 실행 (대본, 이미지, 음성 생성)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: node src/main.js
+
+      - name: 비디오 렌더링 (mp4 굽기)
+        working-directory: ./video
+        run: npx remotion render MyComp out/video.mp4
+
+      - name: 완성된 영상 파일 저장 및 다운로드 링크 제공
+        uses: actions/upload-artifact@v4
+        with:
+          name: shorts-video
+          path: video/out/video.mp4
+          retention-days: 7
