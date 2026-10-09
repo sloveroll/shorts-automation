@@ -8,7 +8,7 @@ import fs from 'fs';
 
 const execPromise = util.promisify(exec);
 
-async function runPipeline(topic) {
+async function runPipeline(topic, sequenceNum = 1) {
   try {
     console.log(`\n🚀 [Step 1] 파이프라인 시작: 주제 "${topic}"`);
     
@@ -42,13 +42,23 @@ async function runPipeline(topic) {
     // 3. 영상 렌더링 (Remotion)
     console.log('\n🎬 영상 렌더링 시작 (Remotion)...');
     const videoDir = path.join(process.cwd(), 'video');
-    const outputPath = path.join(process.cwd(), 'final_shorts.mp4');
     
-    let renderCommand = `npx remotion render src/index.ts MyComp ../final_shorts.mp4 --concurrency=1 --gl=angle --log=verbose`;
+    // 날짜 포맷 (예: 20261010)
+    const now = new Date();
+    const dateStr = now.getFullYear().toString() + 
+                    String(now.getMonth() + 1).padStart(2, '0') + 
+                    String(now.getDate()).padStart(2, '0');
+    
+    // 시퀀스 번호 포맷 (예: 01, 02)
+    const seqStr = String(sequenceNum).padStart(2, '0');
+    const filename = `${dateStr}_shorts_${seqStr}.mp4`;
+    const outputPath = path.join(process.cwd(), filename);
+    
+    let renderCommand = `npx remotion render src/index.ts MyComp ../${filename} --concurrency=1 --gl=angle --log=verbose`;
     
     // 로컬 Mac 환경일 때만 내장 크롬 충돌을 피하기 위해 시스템 크롬 강제 할당
     if (process.platform === 'darwin') {
-      renderCommand = `NODE_OPTIONS=--dns-result-order=ipv4first npx remotion render src/index.ts MyComp ../final_shorts.mp4 --browser-executable="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`;
+      renderCommand = `NODE_OPTIONS=--dns-result-order=ipv4first npx remotion render src/index.ts MyComp ../${filename} --browser-executable="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`;
     }
 
     const { stdout, stderr } = await execPromise(renderCommand, {
@@ -72,6 +82,7 @@ async function runPipeline(topic) {
 async function startAutoPipeline() {
   let topic = process.argv[2];
   
+  let sequenceNum = 1;
   if (!topic) {
     const usedTopicsPath = path.join(process.cwd(), 'used_topics.txt');
     let usedTopics = [];
@@ -80,6 +91,8 @@ async function startAutoPipeline() {
       usedTopics = fileContent.split('\n').filter(t => t.trim() !== '');
     }
     
+    sequenceNum = usedTopics.length + 1;
+    
     // 중복을 피해 끝없이 새 주제를 구상
     topic = await generateDynamicTopic(usedTopics);
     
@@ -87,7 +100,7 @@ async function startAutoPipeline() {
     fs.appendFileSync(usedTopicsPath, topic + '\n');
   }
   
-  await runPipeline(topic);
+  await runPipeline(topic, sequenceNum);
 }
 
 startAutoPipeline();

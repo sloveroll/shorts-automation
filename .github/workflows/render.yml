@@ -2,6 +2,11 @@ name: Render Shorts Automation
 
 on:
   workflow_dispatch: # GitHub에서 수동으로 버튼을 눌러서 실행
+  schedule:
+    - cron: '0 23 * * *' # 매일 UTC 23:00 (한국 시간 아침 8시)
+
+permissions:
+  contents: write
 
 jobs:
   render:
@@ -40,9 +45,17 @@ jobs:
           FAL_KEY: ${{ secrets.FAL_KEY }}
         run: node src/main.js
 
+      - name: Save Used Topics History
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add used_topics.txt
+          git commit -m "chore: update used topics history [skip ci]" || echo "No changes to commit"
+          git push
+
       - name: Upload Generated Video
         uses: actions/upload-artifact@v4
         with:
           name: final_shorts
-          path: final_shorts.mp4
+          path: '*_shorts_*.mp4'
           retention-days: 7
