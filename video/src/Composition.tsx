@@ -1,6 +1,9 @@
 import { AbsoluteFill, Img, useCurrentFrame, useVideoConfig, staticFile } from "remotion";
 import { Audio } from "@remotion/media";
 import React from "react";
+import { loadFont } from "@remotion/google-fonts/NotoSansKR";
+
+const { fontFamily } = loadFont();
 // JSON 데이터를 안전하게 불러옵니다.
 const alignment = require("../public/alignment.json");
 let scriptData = { title: "그 시절 우리가 사랑했던 추억" };
@@ -71,6 +74,7 @@ export const MyComponent: React.FC = () => {
         color: "#FFD700",
         fontSize: "60px",
         fontWeight: "900",
+        fontFamily: `${fontFamily}, sans-serif`,
         WebkitTextStroke: "2px black",
         zIndex: 2
       }}>
@@ -86,6 +90,7 @@ export const MyComponent: React.FC = () => {
         color: "#FFD700",
         fontSize: "130px", // 시선을 확 끄는 압도적 크기
         fontWeight: "900",
+        fontFamily: `${fontFamily}, sans-serif`,
         lineHeight: "1.3",
         WebkitTextStroke: "4px black", // 뚜렷한 가독성
         textShadow: "8px 8px 20px rgba(0,0,0,1)",
@@ -151,7 +156,7 @@ export const MyComponent: React.FC = () => {
                 color: "#FFD700", // 노란색
                 fontSize: "75px", // 읽기 편한 사이즈
                 fontWeight: "900",
-                fontFamily: "sans-serif",
+                fontFamily: `${fontFamily}, sans-serif`,
                 textAlign: "center",
                 WebkitTextStroke: "3px black", // 검은색 뚜렷한 테두리
                 textShadow: "6px 6px 15px rgba(0,0,0,1)", // 강한 그림자
