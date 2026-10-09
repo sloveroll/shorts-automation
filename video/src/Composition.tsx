@@ -105,10 +105,13 @@ export const MyComponent: React.FC = () => {
       {/* 4. 오디오 (나레이션 & BGM) */}
       <Audio src={staticFile("audio.mp3")} />
       {/* BGM: 무료 감성 피아노 브금 (볼륨 낮게) */}
+      {/* ⚠️ 픽사베이 서버가 깃허브 로봇 접근을 차단(403 에러)하여 렌더링이 실패하므로 주석 처리함. 나중에 public 폴더에 직접 넣는 방식으로 변경 요망 */}
+      {/*
       <Audio 
         src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_21421f1d1d.mp3" 
         volume={0.15} 
       />
+      */}
       
       {/* 5. 다큐멘터리 스타일 하단 자막 (문장 단위) */}
       <div style={{ position: "absolute", bottom: "12%", display: "flex", justifyContent: "center", alignItems: "center", width: "90%", zIndex: 3 }}>
