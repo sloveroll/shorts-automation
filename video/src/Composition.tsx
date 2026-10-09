@@ -105,12 +105,10 @@ export const MyComponent: React.FC = () => {
       {/* 4. 오디오 (나레이션 & BGM) */}
       <Audio src={staticFile("audio.mp3")} />
       {/* BGM: 무료 감성 피아노 브금 (볼륨 낮게) */}
-      {/* BGM 핫링킹 차단으로 임시 주석 처리
       <Audio 
         src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_21421f1d1d.mp3" 
         volume={0.15} 
       />
-      */}
       
       {/* 5. 다큐멘터리 스타일 하단 자막 (문장 단위) */}
       <div style={{ position: "absolute", bottom: "12%", display: "flex", justifyContent: "center", alignItems: "center", width: "90%", zIndex: 3 }}>
