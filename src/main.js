@@ -17,7 +17,11 @@ async function runPipeline(topic) {
     const scriptJson = await generateScript(topic);
     
     // Remotion 컴포넌트에서 활용할 수 있도록 전체 대본 저장
-    fs.writeFileSync(path.join(process.cwd(), 'video', 'public', 'script.json'), JSON.stringify(scriptJson, null, 2));
+    const publicDir = path.join(process.cwd(), 'video', 'public');
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+    fs.writeFileSync(path.join(publicDir, 'script.json'), JSON.stringify(scriptJson, null, 2));
 
     // 모든 나레이션을 하나의 텍스트로 합치기 (ElevenLabs 음성 생성용)
     const fullNarration = scriptJson.scenes.map(scene => scene.narration).join(' ');
