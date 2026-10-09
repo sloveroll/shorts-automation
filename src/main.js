@@ -58,6 +58,7 @@ async function runPipeline(topic) {
     
   } catch (error) {
     console.error('\n❌ 파이프라인 실행 중 오류 발생:', error);
+    process.exit(1);
   }
 }
 

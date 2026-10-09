@@ -24,8 +24,8 @@ jobs:
         working-directory: ./video
         run: npm install
 
-      - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg & Chrome Dependencies
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg libx11-xcb1 libxcb-dri3-0 libxtst6 libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2
 
       - name: Run Automation Pipeline
         env:
