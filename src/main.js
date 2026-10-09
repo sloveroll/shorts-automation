@@ -54,7 +54,7 @@ async function runPipeline(topic, sequenceNum = 1) {
     const filename = `${dateStr}_shorts_${seqStr}.mp4`;
     const outputPath = path.join(process.cwd(), filename);
     
-    let renderCommand = `npx remotion render src/index.ts MyComp ../${filename} --concurrency=1 --gl=angle --log=verbose`;
+    let renderCommand = `npx remotion render src/index.ts MyComp ../${filename} --concurrency=1 --gl=angle`;
     
     // 로컬 Mac 환경일 때만 내장 크롬 충돌을 피하기 위해 시스템 크롬 강제 할당
     if (process.platform === 'darwin') {
@@ -62,7 +62,8 @@ async function runPipeline(topic, sequenceNum = 1) {
     }
 
     const { stdout, stderr } = await execPromise(renderCommand, {
-      cwd: videoDir
+      cwd: videoDir,
+      maxBuffer: 1024 * 1024 * 50 // 50MB 버퍼로 늘림 (폰트 로딩 로그 방지)
     });
     
     console.log(stdout);
