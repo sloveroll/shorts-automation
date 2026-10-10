@@ -60,3 +60,21 @@ jobs:
           name: final_shorts
           path: '*_shorts_*.mp4'
           retention-days: 7
+
+      - name: Find generated video
+        if: always()
+        id: find_video
+        run: |
+          FILE=$(ls *_shorts_*.mp4 | head -n 1)
+          echo "video_file=$FILE" >> $GITHUB_OUTPUT
+
+      - name: Upload to Google Drive
+        if: env.GDRIVE_CREDENTIALS != ''
+        uses: adityak74/google-drive-upload-action@main
+        with:
+          credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
+          filename: ${{ steps.find_video.outputs.video_file }}
+          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
+          overwrite: "true"
+        env:
+          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
